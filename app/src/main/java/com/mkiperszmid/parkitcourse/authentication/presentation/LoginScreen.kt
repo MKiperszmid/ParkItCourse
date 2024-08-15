@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,10 +25,17 @@ import com.mkiperszmid.parkitcourse.authentication.presentation.components.Login
 
 @Composable
 fun LoginScreen(
+    onLoggedIn: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
     val context = LocalContext.current
+
+    LaunchedEffect(state.loginStatus) {
+        if (state.loginStatus == LoginStatus.LOGGED_IN) {
+            onLoggedIn()
+        }
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) {
         Box(
