@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ParkItCourseTheme {
                 val navHostController = rememberNavController()
-                val startDestination = NavigationRoute.HomeScreen
+                val startDestination = NavigationRoute.LoginScreen
                 NavigationHost(
                     navHostController = navHostController,
                     startDestination = startDestination
