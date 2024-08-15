@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -13,6 +16,16 @@ android {
     namespace = "com.mkiperszmid.parkitcourse"
     compileSdk = 34
 
+    val localPropertiesFile = rootProject.file("local.properties")
+    val localProperties = Properties().apply {
+        load(FileInputStream(localPropertiesFile))
+    }
+
+    val googleMapsApiKey = localProperties.getProperty("MAPS_API_KEY")
+        ?: throw IllegalArgumentException("No MAPS_API_KEY was found in local.properties")
+    val googleWebclientId = localProperties.getProperty("GOOGLE_WEBCLIENT_ID")
+        ?: throw IllegalArgumentException("No GOOGLE_WEBCLIENT_ID was found in local.properties")
+
     defaultConfig {
         applicationId = "com.mkiperszmid.parkitcourse"
         minSdk = 24
@@ -24,6 +37,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "MAPS_API_KEY", "\"$googleMapsApiKey\"")
+        buildConfigField("String", "GOOGLE_WEBCLIENT_ID", "\"$googleWebclientId\"")
+
     }
 
     buildTypes {
@@ -44,6 +61,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
