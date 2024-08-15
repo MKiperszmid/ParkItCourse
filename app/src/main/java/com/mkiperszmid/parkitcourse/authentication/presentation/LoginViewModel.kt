@@ -7,16 +7,23 @@ import androidx.compose.runtime.setValue
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mkiperszmid.parkitcourse.authentication.domain.AuthenticationRepository
+import kotlinx.coroutines.launch
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val authenticationRepository: AuthenticationRepository
+) : ViewModel() {
     var state by mutableStateOf(LoginState())
         private set
 
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.LogIn -> {
-                println()
+                viewModelScope.launch {
+                    authenticationRepository.oneTapLogin()
+                }
             }
         }
     }
