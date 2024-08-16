@@ -1,7 +1,6 @@
 package com.mkiperszmid.parkitcourse.home.presentation
 
-import android.location.Location
-
+import com.mkiperszmid.parkitcourse.home.domain.model.Location
 
 data class HomeState(
     val carStatus: CarStatus = CarStatus.NO_PARKED_CAR,
