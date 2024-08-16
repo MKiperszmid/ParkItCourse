@@ -1,11 +1,11 @@
 package com.mkiperszmid.parkitcourse.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.mkiperszmid.parkitcourse.authentication.presentation.LoginScreen
+import com.mkiperszmid.parkitcourse.home.presentation.HomeScreen
 
 @Composable
 fun NavigationHost(
@@ -19,9 +19,9 @@ fun NavigationHost(
                 navHostController.navigate(NavigationRoute.HomeScreen.route)
             })
         }
-        
+
         composable(NavigationRoute.HomeScreen.route) {
-            Text(text = "Home Screen!")
+            HomeScreen()
         }
     }
 }
