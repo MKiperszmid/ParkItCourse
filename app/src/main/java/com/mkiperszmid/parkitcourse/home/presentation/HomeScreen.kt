@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.mkiperszmid.parkitcourse.home.domain.model.Location
 import com.mkiperszmid.parkitcourse.home.presentation.components.HomeButton
 import com.mkiperszmid.parkitcourse.home.presentation.components.HomeMap
 import com.mkiperszmid.parkitcourse.home.presentation.components.HomeSearch
@@ -32,9 +33,12 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
+            val location = state.car?.let {
+                Location(latitude = it.latitude, longitude = it.longitude)
+            }
             HomeMap(
                 currentLocation = state.currentLocation,
-                carLocation = null,
+                carLocation = location,
                 modifier = Modifier.fillMaxSize()
             )
 
