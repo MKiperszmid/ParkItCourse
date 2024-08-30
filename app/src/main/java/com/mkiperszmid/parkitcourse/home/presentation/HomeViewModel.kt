@@ -43,8 +43,12 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
         when (event) {
             HomeEvent.SaveCar -> {
-                state.currentLocation?.let {
-                    viewModelScope.launch {
+                viewModelScope.launch {
+                    val currentLocation = locationService.getCurrentLocation()
+                    state = state.copy(
+                        currentLocation = currentLocation
+                    )
+                    currentLocation?.let {
                         val car = Car(latitude = it.latitude, longitude = it.longitude)
                         repository.parkCar(car)
                         val parkedCar = repository.getParkedCar()
