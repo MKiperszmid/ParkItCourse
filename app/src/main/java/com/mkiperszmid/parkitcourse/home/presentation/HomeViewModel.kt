@@ -8,12 +8,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
+import com.mkiperszmid.parkitcourse.home.domain.model.Car
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val locationService: LocationService
+    private val locationService: LocationService,
+    private val repository: HomeRepository
 ) : ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
@@ -26,14 +29,33 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+
+        viewModelScope.launch {
+            repository.getParkedCar()?.let {
+                state = state.copy(
+                    car = it,
+                    carStatus = CarStatus.PARKED_CAR
+                )
+            }
+        }
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             HomeEvent.SaveCar -> {
-                state = state.copy(
-                    carStatus = CarStatus.PARKED_CAR
-                )
+                state.currentLocation?.let {
+                    viewModelScope.launch {
+                        val car = Car(latitude = it.latitude, longitude = it.longitude)
+                        repository.parkCar(car)
+                        val parkedCar = repository.getParkedCar()
+                        state = state.copy(
+                            car = parkedCar
+                        )
+                    }
+                    state = state.copy(
+                        carStatus = CarStatus.PARKED_CAR
+                    )
+                }
             }
 
             HomeEvent.StartSearch -> {
@@ -43,6 +65,11 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeEvent.StopSearch -> {
+                state.car?.let {
+                    viewModelScope.launch {
+                        repository.deleteCar(it)
+                    }
+                }
                 state = state.copy(
                     carStatus = CarStatus.NO_PARKED_CAR
                 )
