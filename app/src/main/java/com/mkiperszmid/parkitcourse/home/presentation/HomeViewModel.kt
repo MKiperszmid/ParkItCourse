@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
 import com.mkiperszmid.parkitcourse.home.domain.model.Car
+import com.mkiperszmid.parkitcourse.home.domain.model.Location
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -64,6 +65,20 @@ class HomeViewModel @Inject constructor(
                 state = state.copy(
                     carStatus = CarStatus.SEARCHING
                 )
+                state.car?.let { carLocation ->
+                    state.currentLocation?.let { userLocation ->
+                        viewModelScope.launch {
+                            val route = repository.getDirections(
+                                userLocation,
+                                Location(
+                                    latitude = carLocation.latitude,
+                                    longitude = carLocation.longitude
+                                )
+                            )
+                            println(route)
+                        }
+                    }
+                }
             }
 
             HomeEvent.StopSearch -> {

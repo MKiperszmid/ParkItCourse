@@ -6,13 +6,23 @@ import com.mkiperszmid.parkitcourse.home.data.HomeRepositoryImpl
 import com.mkiperszmid.parkitcourse.home.data.LocationServiceImpl
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDao
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDatabase
+import com.mkiperszmid.parkitcourse.home.data.remote.DirectionsApi
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
+import com.mkiperszmid.parkitcourse.home.domain.model.Car
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -32,7 +42,29 @@ object HomeModule {
 
     @Provides
     @Singleton
-    fun provideHomeRepository(dao: HomeDao): HomeRepository {
-        return HomeRepositoryImpl(dao)
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDirectionsApi(client: OkHttpClient): DirectionsApi {
+        return Retrofit.Builder().baseUrl(DirectionsApi.BASE_URL).client(client)
+            .addConverterFactory(
+                Json {
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                    explicitNulls = false
+                }.asConverterFactory("application/json".toMediaType())
+            ).build().create()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideHomeRepository(dao: HomeDao, api: DirectionsApi): HomeRepository {
+        return HomeRepositoryImpl(dao, api)
     }
 }
