@@ -30,9 +30,23 @@ class HomeViewModel @Inject constructor(
 
     fun onEvent(event: HomeEvent) {
         when (event) {
-            HomeEvent.SaveCar -> TODO()
-            HomeEvent.StartSearch -> TODO()
-            HomeEvent.StopSearch -> TODO()
+            HomeEvent.SaveCar -> {
+                state = state.copy(
+                    carStatus = CarStatus.PARKED_CAR
+                )
+            }
+
+            HomeEvent.StartSearch -> {
+                state = state.copy(
+                    carStatus = CarStatus.SEARCHING
+                )
+            }
+
+            HomeEvent.StopSearch -> {
+                state = state.copy(
+                    carStatus = CarStatus.NO_PARKED_CAR
+                )
+            }
         }
     }
 }

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mkiperszmid.parkitcourse.home.presentation.components.HomeButton
 import com.mkiperszmid.parkitcourse.home.presentation.components.HomeMap
+import com.mkiperszmid.parkitcourse.home.presentation.components.HomeSearch
 
 @Composable
 fun HomeScreen(
@@ -29,17 +32,51 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(it)
         ) {
-            HomeMap(currentLocation = state.currentLocation, carLocation = null, modifier = Modifier.fillMaxSize())
-            HomeButton(
-                onClick = { /*TODO*/ },
-                text = "Park Here",
-                imageVector = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 64.dp)
-                    .padding(horizontal = 16.dp)
+            HomeMap(
+                currentLocation = state.currentLocation,
+                carLocation = null,
+                modifier = Modifier.fillMaxSize()
             )
+
+            when (state.carStatus) {
+                CarStatus.NO_PARKED_CAR -> {
+                    HomeButton(
+                        onClick = { viewModel.onEvent(HomeEvent.SaveCar) },
+                        text = "Park Here",
+                        imageVector = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 64.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+
+                CarStatus.PARKED_CAR -> {
+                    HomeButton(
+                        onClick = { viewModel.onEvent(HomeEvent.StartSearch) },
+                        text = "Get Directions",
+                        imageVector = Icons.Default.Directions,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 64.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+
+                CarStatus.SEARCHING -> {
+                    HomeSearch(
+                        distance = "1.3km", onClick = {
+                            viewModel.onEvent(HomeEvent.StopSearch)
+                        }, modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 64.dp)
+                            .padding(horizontal = 16.dp)
+                    )
+                }
+            }
         }
     }
 }
