@@ -13,13 +13,16 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.mkiperszmid.parkitcourse.home.domain.model.Location
+import com.mkiperszmid.parkitcourse.home.domain.model.Route
 
 @Composable
 fun HomeMap(
     currentLocation: Location?,
     carLocation: Location?,
+    route: Route?,
     modifier: Modifier = Modifier
 ) {
     val cameraPositionState = rememberCameraPositionState()
@@ -53,6 +56,10 @@ fun HomeMap(
         carLocation?.let {
             CarMarker(position = it)
         }
+
+        route?.let { route ->
+            Polyline(points = route.polylines.map { LatLng(it.latitude, it.longitude) })
+        }
     }
 }
 
@@ -68,5 +75,5 @@ private fun CarMarker(position: Location) {
 @Preview
 @Composable
 fun HomeMapPreview() {
-    HomeMap(null, null)
+    HomeMap(null, null, null)
 }

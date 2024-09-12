@@ -62,20 +62,31 @@ class HomeViewModel @Inject constructor(
             }
 
             HomeEvent.StartSearch -> {
-                state = state.copy(
-                    carStatus = CarStatus.SEARCHING
-                )
                 state.car?.let { carLocation ->
-                    state.currentLocation?.let { userLocation ->
-                        viewModelScope.launch {
-                            val route = repository.getDirections(
+
+                    viewModelScope.launch {
+                        val currentLocation = locationService.getCurrentLocation()
+                        state = state.copy(
+                            currentLocation = currentLocation
+                        )
+                        state.currentLocation?.let { userLocation ->
+                            repository.getDirections(
                                 userLocation,
                                 Location(
                                     latitude = carLocation.latitude,
                                     longitude = carLocation.longitude
                                 )
-                            )
-                            println(route)
+                            ).onSuccess {
+                                state = state.copy(
+                                    route = it,
+                                    carStatus = CarStatus.SEARCHING
+                                )
+
+
+
+                            }.onFailure {
+                                // TODO: Show error message
+                            }
                         }
                     }
                 }
@@ -89,7 +100,8 @@ class HomeViewModel @Inject constructor(
                 }
                 state = state.copy(
                     carStatus = CarStatus.NO_PARKED_CAR,
-                    car = null
+                    car = null,
+                    route = null
                 )
             }
         }
