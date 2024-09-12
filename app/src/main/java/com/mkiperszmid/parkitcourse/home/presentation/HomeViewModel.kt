@@ -12,6 +12,8 @@ import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
 import com.mkiperszmid.parkitcourse.home.domain.model.Car
 import com.mkiperszmid.parkitcourse.home.domain.model.Location
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -21,6 +23,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
+
+    private lateinit var locationJob: Job
 
     init {
         viewModelScope.launch {
@@ -63,8 +67,7 @@ class HomeViewModel @Inject constructor(
 
             HomeEvent.StartSearch -> {
                 state.car?.let { carLocation ->
-
-                    viewModelScope.launch {
+                    locationJob = viewModelScope.launch {
                         val currentLocation = locationService.getCurrentLocation()
                         state = state.copy(
                             currentLocation = currentLocation
@@ -82,8 +85,12 @@ class HomeViewModel @Inject constructor(
                                     carStatus = CarStatus.SEARCHING
                                 )
 
-
-
+                                locationService.getLocationUpdates().collectLatest {
+                                    state = state.copy(
+                                        currentLocation = it
+                                    )
+                                    println("Ubicacion: $it")
+                                }
                             }.onFailure {
                                 // TODO: Show error message
                             }
@@ -103,6 +110,7 @@ class HomeViewModel @Inject constructor(
                     car = null,
                     route = null
                 )
+                locationJob.cancel()
             }
         }
     }

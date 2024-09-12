@@ -14,6 +14,7 @@ import com.google.android.gms.location.Priority
 import com.mkiperszmid.parkitcourse.home.data.mapper.toDomain
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
 import com.mkiperszmid.parkitcourse.home.domain.model.Location
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -53,6 +54,10 @@ class LocationServiceImpl(
                 locationCallback!!,
                 Looper.getMainLooper()
             )
+
+            awaitClose {
+                stopLocationUpdates()
+            }
         }
     }
 
