@@ -10,6 +10,7 @@ import com.mkiperszmid.parkitcourse.home.data.remote.DirectionsApi
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
 import com.mkiperszmid.parkitcourse.home.domain.model.Car
+import com.mkiperszmid.parkitcourse.home.domain.usecase.GetPathToCarUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,4 +68,11 @@ object HomeModule {
     fun provideHomeRepository(dao: HomeDao, api: DirectionsApi): HomeRepository {
         return HomeRepositoryImpl(dao, api)
     }
+
+    @Provides
+    @Singleton
+    fun provideGetPathToCarUseCase(repository: HomeRepository): GetPathToCarUseCase {
+        return GetPathToCarUseCase(repository)
+    }
+
 }
