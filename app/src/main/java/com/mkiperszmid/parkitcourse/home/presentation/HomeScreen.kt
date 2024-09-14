@@ -75,7 +75,7 @@ fun HomeScreen(
 
                     CarStatus.SEARCHING -> {
                         HomeSearch(
-                            distance = "1.3km", onClick = {
+                            distance = metersToText(state.route?.distance), onClick = {
                                 viewModel.onEvent(HomeEvent.StopSearch)
                             }, modifier = Modifier
                                 .fillMaxWidth()

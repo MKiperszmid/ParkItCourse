@@ -28,7 +28,7 @@ import com.mkiperszmid.parkitcourse.ui.theme.AccentColor
 
 @Composable
 fun HomeSearch(
-    distance: String,
+    distance: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -47,20 +47,22 @@ fun HomeSearch(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(18.dp)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(11.dp)) {
-            Text(
-                text = "Your Vehicle",
-                color = Color(0x47FFFFFF),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.Route,
-                    contentDescription = null,
-                    tint = AccentColor
+        distance?.let {
+            Column(verticalArrangement = Arrangement.spacedBy(11.dp)) {
+                Text(
+                    text = "Your Vehicle",
+                    color = Color(0x47FFFFFF),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
-                Text(text = "$distance away", fontSize = 18.sp, color = Color.White)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Route,
+                        contentDescription = null,
+                        tint = AccentColor
+                    )
+                    Text(text = "$it away", fontSize = 18.sp, color = Color.White)
+                }
             }
         }
         HomeButton(
@@ -74,5 +76,12 @@ fun HomeSearch(
 @Preview
 @Composable
 fun HomeSearchPreview() {
-    HomeSearch("1.3km", {}, modifier = Modifier.fillMaxWidth())
+    HomeSearch("123 km", {}, modifier = Modifier.fillMaxWidth())
 }
+
+@Preview
+@Composable
+fun HomeSearchNullDistancePreview() {
+    HomeSearch(null, {}, modifier = Modifier.fillMaxWidth())
+}
+

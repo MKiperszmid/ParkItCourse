@@ -5,6 +5,7 @@ import com.google.maps.android.ktx.utils.isLocationOnPath
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.model.Location
 import com.mkiperszmid.parkitcourse.home.domain.model.Route
+import kotlin.math.roundToInt
 
 class GetPathToCarUseCase(private val repository: HomeRepository) {
     companion object {
@@ -26,12 +27,18 @@ class GetPathToCarUseCase(private val repository: HomeRepository) {
         return if (isOnRoute) {
             val newPolyline = route.polylines.drop(closestIndex)
             println("Estas en camino!")
-            Result.success(route.copy(polylines = newPolyline))
+            val distance = calculateDistanceBetweenLocations(currentLocation, newPolyline.last())
+
+            Result.success(
+                route.copy(
+                    polylines = newPolyline,
+                    distance = distance.roundToInt()
+                )
+            )
         } else {
             println("Calculando nueva ruta!")
             repository.getDirections(currentLocation, destination)
         }
-
     }
 
     private fun getClosestLocationIndex(
