@@ -36,12 +36,9 @@ fun HomeScreen(
                     .fillMaxSize()
                     .padding(it)
             ) {
-                val location = state.car?.let {
-                    Location(latitude = it.latitude, longitude = it.longitude)
-                }
                 HomeMap(
                     currentLocation = state.currentLocation,
-                    carLocation = location,
+                    carLocation = state.car?.location,
                     route = state.route,
                     modifier = Modifier.fillMaxSize()
                 )

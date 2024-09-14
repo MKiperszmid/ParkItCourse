@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
                         currentLocation = currentLocation
                     )
                     currentLocation?.let {
-                        val car = Car(latitude = it.latitude, longitude = it.longitude)
+                        val car = Car(location = it)
                         repository.parkCar(car)
                         val parkedCar = repository.getParkedCar()
                         state = state.copy(
@@ -77,10 +77,7 @@ class HomeViewModel @Inject constructor(
                         state.currentLocation?.let { userLocation ->
                             repository.getDirections(
                                 userLocation,
-                                Location(
-                                    latitude = carLocation.latitude,
-                                    longitude = carLocation.longitude
-                                )
+                                carLocation.location
                             ).onSuccess {
                                 state = state.copy(
                                     route = it,
@@ -94,7 +91,7 @@ class HomeViewModel @Inject constructor(
                                     if (state.currentLocation != null && state.route != null) {
                                         getPathToCarUseCase(
                                             state.currentLocation!!,
-                                            Location(carLocation.latitude, carLocation.longitude),
+                                            carLocation.location,
                                             state.route!!
                                         ).onSuccess {
                                             state = state.copy(
