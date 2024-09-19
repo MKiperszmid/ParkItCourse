@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 val startDestination = getStartDestination()
                 NavigationHost(
                     navHostController = navHostController,
-                    startDestination = NavigationRoute.HomeScreen//startDestination
+                    startDestination = startDestination
                 )
             }
         }
