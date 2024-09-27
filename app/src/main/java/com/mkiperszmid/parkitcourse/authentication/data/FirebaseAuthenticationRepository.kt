@@ -13,11 +13,11 @@ import com.mkiperszmid.parkitcourse.authentication.domain.AuthenticationReposito
 import kotlinx.coroutines.tasks.await
 import java.security.MessageDigest
 import java.util.UUID
+import javax.inject.Inject
 
-class FirebaseAuthenticationRepository(
-    private val context: Context
-) : AuthenticationRepository {
-    override suspend fun oneTapLogin(): Result<Unit> {
+class FirebaseAuthenticationRepository @Inject constructor() : AuthenticationRepository {
+
+    override suspend fun oneTapLogin(context: Context): Result<Unit> {
         val credentialManager = CredentialManager.create(context)
         val nonce = UUID.randomUUID().toString().toByteArray()
         val digest = MessageDigest.getInstance("SHA-256").digest(nonce)
