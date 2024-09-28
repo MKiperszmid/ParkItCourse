@@ -43,6 +43,15 @@ android {
 
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = File(localProperties.getProperty("KEYSTORE_PATH"))
+            storePassword = localProperties.getProperty("KEYSTORE_PASSWORD")
+            keyAlias = localProperties.getProperty("KEYSTORE_ALIAS")
+            keyPassword = localProperties.getProperty("KEYSTORE_ALIAS_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -50,6 +59,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
