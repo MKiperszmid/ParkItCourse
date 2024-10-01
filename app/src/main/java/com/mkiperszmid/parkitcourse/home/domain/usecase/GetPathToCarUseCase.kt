@@ -1,13 +1,15 @@
 package com.mkiperszmid.parkitcourse.home.domain.usecase
 
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.ktx.utils.isLocationOnPath
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
+import com.mkiperszmid.parkitcourse.home.domain.distance.DistanceCalculator
 import com.mkiperszmid.parkitcourse.home.domain.model.Location
 import com.mkiperszmid.parkitcourse.home.domain.model.Route
 import kotlin.math.roundToInt
 
-class GetPathToCarUseCase(private val repository: HomeRepository) {
+class GetPathToCarUseCase(
+    private val repository: HomeRepository,
+    private val distanceCalculator: DistanceCalculator
+) {
     companion object {
         const val MAX_METERS = 30.0
     }
@@ -18,16 +20,13 @@ class GetPathToCarUseCase(private val repository: HomeRepository) {
         route: Route
     ): Result<Route> {
         val closestIndex = getClosestLocationIndex(currentLocation, route.polylines)
-        val isOnRoute = route.polylines.map { LatLng(it.latitude, it.longitude) }.isLocationOnPath(
-            LatLng(currentLocation.latitude, currentLocation.longitude),
-            false,
-            MAX_METERS
-        )
+        val isOnRoute =
+            distanceCalculator.isLocationOnPath(route.polylines, currentLocation, MAX_METERS)
 
         return if (isOnRoute) {
             val newPolyline = route.polylines.drop(closestIndex)
             println("Estas en camino!")
-            val distance = calculateDistanceBetweenLocations(currentLocation, newPolyline.last())
+            val distance = distanceCalculator.calculateDistance(currentLocation, newPolyline.last())
 
             Result.success(
                 route.copy(
@@ -49,7 +48,7 @@ class GetPathToCarUseCase(private val repository: HomeRepository) {
         var closestIndex = 0
 
         for (i in polyline.indices) {
-            val distance = calculateDistanceBetweenLocations(currentLocation, polyline[i])
+            val distance = distanceCalculator.calculateDistance(currentLocation, polyline[i])
             if (distance < minDistance) {
                 minDistance = distance
                 closestIndex = i
@@ -58,18 +57,4 @@ class GetPathToCarUseCase(private val repository: HomeRepository) {
         return closestIndex
     }
 
-    private fun calculateDistanceBetweenLocations(
-        firstLocation: Location,
-        secondLocation: Location,
-    ): Float {
-        val result = FloatArray(1)
-        android.location.Location.distanceBetween(
-            firstLocation.latitude,
-            firstLocation.longitude,
-            secondLocation.latitude,
-            secondLocation.longitude,
-            result
-        )
-        return result.first()
-    }
 }

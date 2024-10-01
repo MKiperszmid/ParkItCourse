@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import com.mkiperszmid.parkitcourse.home.data.HomeRepositoryImpl
 import com.mkiperszmid.parkitcourse.home.data.LocationServiceImpl
+import com.mkiperszmid.parkitcourse.home.data.distance.DistanceCalculatorImpl
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDao
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDatabase
 import com.mkiperszmid.parkitcourse.home.data.remote.DirectionsApi
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
+import com.mkiperszmid.parkitcourse.home.domain.distance.DistanceCalculator
 import com.mkiperszmid.parkitcourse.home.domain.model.Car
 import com.mkiperszmid.parkitcourse.home.domain.usecase.GetPathToCarUseCase
 import dagger.Module
@@ -71,8 +73,18 @@ object HomeModule {
 
     @Provides
     @Singleton
-    fun provideGetPathToCarUseCase(repository: HomeRepository): GetPathToCarUseCase {
-        return GetPathToCarUseCase(repository)
+    fun provideGetPathToCarUseCase(
+        repository: HomeRepository,
+        distanceCalculator: DistanceCalculator
+    ): GetPathToCarUseCase {
+        return GetPathToCarUseCase(repository, distanceCalculator)
     }
+
+    @Provides
+    @Singleton
+    fun provideDistanceCalculator(): DistanceCalculator {
+        return DistanceCalculatorImpl()
+    }
+
 
 }
