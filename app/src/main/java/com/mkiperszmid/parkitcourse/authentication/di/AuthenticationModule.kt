@@ -15,7 +15,7 @@ import javax.inject.Singleton
 object AuthenticationModule {
     @Provides
     @Singleton
-    fun provideAuthenticationRepository(@ApplicationContext context: Context): AuthenticationRepository {
-        return FirebaseAuthenticationRepository(context)
+    fun provideAuthenticationRepository(): AuthenticationRepository {
+        return FirebaseAuthenticationRepository()
     }
 }
