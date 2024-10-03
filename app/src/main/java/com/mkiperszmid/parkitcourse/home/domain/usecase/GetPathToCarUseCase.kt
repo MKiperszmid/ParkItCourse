@@ -19,11 +19,11 @@ class GetPathToCarUseCase(
         destination: Location,
         route: Route
     ): Result<Route> {
-        val closestIndex = getClosestLocationIndex(currentLocation, route.polylines)
         val isOnRoute =
             distanceCalculator.isLocationOnPath(route.polylines, currentLocation, MAX_METERS)
 
         return if (isOnRoute) {
+            val closestIndex = getClosestLocationIndex(currentLocation, route.polylines)
             val newPolyline = route.polylines.drop(closestIndex)
             println("Estas en camino!")
             val distance = distanceCalculator.calculateDistance(currentLocation, newPolyline.last())
