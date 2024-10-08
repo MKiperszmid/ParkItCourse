@@ -32,6 +32,7 @@ mapsSecret = "2.0.1"
 roomKtx = "2.6.1"
 mockk = "1.13.12"
 coroutinesTest = "1.9.0-RC.2"
+coreKtxVersion = "1.6.1"
 
 [libraries]
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
@@ -40,6 +41,8 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomKtx
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "coreKtxVersion" }
+androidx-core-ktx = { module = "androidx.test:core-ktx", version.ref = "coreKtxVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }

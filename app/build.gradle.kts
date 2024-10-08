@@ -33,7 +33,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.mkiperszmid.parkitcourse.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -140,6 +140,8 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
+    androidTestImplementation(libs.androidx.core.ktx)
+    androidTestImplementation(libs.androidx.rules)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     kspAndroidTest(libs.hilt.compiler)
