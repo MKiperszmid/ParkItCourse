@@ -30,6 +30,4 @@ jobs:
           api-level: ${{matrix.api-level}}
           arch: x86
           disable-animations: true
-          enable-hw-keyboard: true
-          headless: true
           script: ./gradlew connectedCheck
