@@ -15,6 +15,8 @@ jobs:
           echo "MAPS_API_KEY=test" >> ./local.properties
           echo "GOOGLE_WEBCLIENT_ID=test" >> ./local.properties
       - name: Create Google Services
-        run: echo "${{secrets.GOOGLE_SERVICES_JSON}}" >> ./app/google-services.json
+        run: |
+          echo "${{secrets.GOOGLE_SERVICES_JSON}}" >> ./app/google-services.json
+          cat ./app/google-services.json
       - run: ./gradlew test
         name: Running Unit Tests
