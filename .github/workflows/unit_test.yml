@@ -11,6 +11,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Create Local Properties
-        run: echo "MAPS_API_KEY=test\nGOOGLE_WEBCLIENT_ID=test" > ./local.properties
+        run: |
+          echo "MAPS_API_KEY=test" >> ./local.properties
+          echo "GOOGLE_WEBCLIENT_ID=test" >> ./local.properties
       - run: ./gradlew test
         name: Running Unit Tests
