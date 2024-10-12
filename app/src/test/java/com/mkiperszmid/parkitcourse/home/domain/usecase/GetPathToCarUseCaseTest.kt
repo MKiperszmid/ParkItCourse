@@ -125,6 +125,6 @@ class GetPathToCarUseCaseTest {
 
         getPathToCarUseCase(currentLocation, destination, route)
 
-        coVerify(exactly = 2) { repository.getDirections(any(), any()) }
+        coVerify(exactly = 1) { repository.getDirections(any(), any()) }
     }
 }
