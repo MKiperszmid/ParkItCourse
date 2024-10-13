@@ -1,5 +1,9 @@
 name: Spotless
-on: pull_request
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
 jobs:
   unitTest:
     name: Run spotless
