@@ -4,6 +4,8 @@ jobs:
   unitTest:
     name: Run spotless
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
