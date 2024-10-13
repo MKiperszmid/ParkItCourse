@@ -147,7 +147,7 @@ dependencies {
     implementation(libs.maps.ktx)
     implementation(libs.maps.utils.ktx)
 
-    //Room
+    // Room
     implementation(libs.androidx.room.ktx)
     ksp(libs.room.compiler)
     implementation(libs.androidx.room.runtime)
