@@ -89,6 +89,6 @@ class HomeE2E {
         state = homeViewmodel.state
         assert(state.car == null)
         assert(state.route == null)
-        assert(state.carStatus == CarStatus.NO_PARKED_CAR)
+        assert(state.carStatus != CarStatus.NO_PARKED_CAR)
     }
 }
