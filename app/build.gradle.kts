@@ -84,7 +84,7 @@ android {
 
 spotless {
     kotlin {
-        target("*.kt")
+        target("**/*.kt")
         ktlint()
             .setEditorConfigPath("$projectDir/config/.editorconfig")
             .customRuleSets(

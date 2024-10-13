@@ -26,6 +26,7 @@ import com.mkiperszmid.parkitcourse.authentication.presentation.components.Login
 @Composable
 fun LoginScreen(
     onLoggedIn: () -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
