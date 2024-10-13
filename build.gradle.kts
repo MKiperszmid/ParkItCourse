@@ -7,4 +7,5 @@ plugins {
     alias(libs.plugins.kotlinKsp) apply false
     alias(libs.plugins.mapsSecret) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.spotless) apply false
 }

@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.spotless)
 }
 
 android {
@@ -79,6 +80,18 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+spotless {
+    kotlin {
+        ktlint()
+            .setEditorConfigPath("$projectDir/config/.editorconfig")
+            .customRuleSets(
+                listOf(
+                    "io.nlopez.compose.rules:ktlint:0.3.3"
+                )
+            )
     }
 }
 
