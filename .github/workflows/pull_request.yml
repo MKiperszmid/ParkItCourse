@@ -24,6 +24,7 @@ jobs:
         name: Running Lint
       - uses: actions/upload-artifact@v4
         with:
+          name: Lint Report
           path: ./app/build/reports/lint-results-debug.html
   unitTest:
     name: Run unit tests
