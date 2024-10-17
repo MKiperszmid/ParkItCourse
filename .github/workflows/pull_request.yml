@@ -10,6 +10,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+      - name: Create Local Properties
+        run: |
+          echo "MAPS_API_KEY=test" >> ./local.properties
+          echo "GOOGLE_WEBCLIENT_ID=test" >> ./local.properties
+      - name: Create Google Services
+        run: |
+          echo "${{secrets.GOOGLE_SERVICES_BASE64}}" | base64 --decode  >> ./app/google-services.json
       - run: ./gradlew lint
         name: Running Lint
       - uses: actions/upload-artifact@v4
