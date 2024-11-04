@@ -20,6 +20,8 @@ jobs:
       - name: Create Keystore
         run: |
           echo "${{secrets.KEYSTORE_FILE_BASE64}}" | base64 --decode  >> ./parkitkeystore
+      - name: Add Keystore Permissions
+        run: chmod 600 ./parkitkeystore
       - name: Create and Sign the release build
         env:
           KEYSTORE_PATH: ./parkitkeystore
