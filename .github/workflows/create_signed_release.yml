@@ -1,0 +1,33 @@
+name: Create Signed Release
+on: workflow_dispatch
+jobs:
+  createSignedRelease:
+    name: Create Signed Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Create Local Properties
+        run: |
+          echo "MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}" >> ./local.properties
+          echo "GOOGLE_WEBCLIENT_ID=${{ secrets.GOOGLE_WEBCLIENT_ID }}" >> ./local.properties
+      - name: Create Google Services
+        run: |
+          echo "${{secrets.GOOGLE_SERVICES_BASE64}}" | base64 --decode  >> ./app/google-services.json
+      - name: Create Keystore
+        run: |
+          echo "${{secrets.KEYSTORE_FILE_BASE64}}" | base64 --decode  >> ./parkitkeystore
+      - name: Create and Sign the release build
+        env:
+          KEYSTORE_PATH: ./parkitkeystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+          KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
+        run: ./gradlew assembleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Signed APK
+          path: ./app/build/outputs/apk/release/*.apk
