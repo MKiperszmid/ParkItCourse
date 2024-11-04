@@ -19,12 +19,14 @@ jobs:
           echo "${{secrets.GOOGLE_SERVICES_BASE64}}" | base64 --decode  >> ./app/google-services.json
       - name: Create Keystore
         run: |
-          echo "${{secrets.KEYSTORE_FILE_BASE64}}" | base64 --decode  >> ./parkitkeystore
+          echo "${{secrets.KEYSTORE_FILE_BASE64}}" | base64 --decode  >> "$GITHUB_WORKSPACE/parkitkeystore"
       - name: Add Keystore Permissions
-        run: chmod 600 ./parkitkeystore
+        run: chmod 600 "$GITHUB_WORKSPACE/parkitkeystore"
+      - name: Verify Keystore Exists
+        run: ls -la "$GITHUB_WORKSPACE/parkitkeystore"
       - name: Create and Sign the release build
         env:
-          KEYSTORE_PATH: ./parkitkeystore
+          KEYSTORE_PATH: "$GITHUB_WORKSPACE/parkitkeystore"
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
           KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
