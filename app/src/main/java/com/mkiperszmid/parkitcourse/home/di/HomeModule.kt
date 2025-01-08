@@ -8,6 +8,7 @@ import com.mkiperszmid.parkitcourse.home.data.distance.DistanceCalculatorImpl
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDao
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDatabase
 import com.mkiperszmid.parkitcourse.home.data.remote.DirectionsApi
+import com.mkiperszmid.parkitcourse.home.data.remote.interceptor.MapsApiRestrictionInterceptor
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
 import com.mkiperszmid.parkitcourse.home.domain.distance.DistanceCalculator
@@ -45,10 +46,10 @@ object HomeModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         return OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
-        }).build()
+        }).addInterceptor(MapsApiRestrictionInterceptor(context)).build()
     }
 
     @Provides
