@@ -2,6 +2,7 @@ package com.mkiperszmid.parkitcourse.home.di
 
 import android.content.Context
 import androidx.room.Room
+import com.mkiperszmid.parkitcourse.home.data.FirebaseFeatureFlag
 import com.mkiperszmid.parkitcourse.home.data.HomeRepositoryImpl
 import com.mkiperszmid.parkitcourse.home.data.LocationServiceImpl
 import com.mkiperszmid.parkitcourse.home.data.distance.DistanceCalculatorImpl
@@ -9,6 +10,7 @@ import com.mkiperszmid.parkitcourse.home.data.local.HomeDao
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDatabase
 import com.mkiperszmid.parkitcourse.home.data.remote.DirectionsApi
 import com.mkiperszmid.parkitcourse.home.data.remote.interceptor.MapsApiRestrictionInterceptor
+import com.mkiperszmid.parkitcourse.home.domain.FeatureFlag
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
 import com.mkiperszmid.parkitcourse.home.domain.distance.DistanceCalculator
@@ -85,6 +87,12 @@ object HomeModule {
     @Singleton
     fun provideDistanceCalculator(): DistanceCalculator {
         return DistanceCalculatorImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeatureFlag(): FeatureFlag {
+        return FirebaseFeatureFlag()
     }
 
 

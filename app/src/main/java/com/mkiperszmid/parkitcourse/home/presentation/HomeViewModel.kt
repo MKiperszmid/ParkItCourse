@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mkiperszmid.parkitcourse.home.domain.FeatureFlag
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.LocationService
 import com.mkiperszmid.parkitcourse.home.domain.model.Car
@@ -21,7 +22,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel @Inject constructor(
     private val locationService: LocationService,
     private val repository: HomeRepository,
-    private val getPathToCarUseCase: GetPathToCarUseCase
+    private val getPathToCarUseCase: GetPathToCarUseCase,
+    private val featureFlag: FeatureFlag
 ) : ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
@@ -38,6 +40,8 @@ class HomeViewModel @Inject constructor(
                 )
             }
         }
+
+        println("El valor de la api key es: ${featureFlag.getFlagValue("openai_apikey")}")
     }
 
     private fun getCurrentLocation() {
