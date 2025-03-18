@@ -21,6 +21,7 @@ class MainActivity : ComponentActivity() {
             ParkItCourseTheme {
                 val navHostController = rememberNavController()
                 val startDestination = getStartDestination()
+                //asdasd
                 NavigationHost(
                     navHostController = navHostController,
                     startDestination = startDestination

@@ -33,6 +33,7 @@ roomKtx = "2.6.1"
 mockk = "1.13.12"
 coroutinesTest = "1.9.0-RC.2"
 coreKtxVersion = "1.6.1"
+spotless = "7.0.0.BETA2"
 
 [libraries]
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
@@ -92,3 +93,4 @@ kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versio
 kotlinKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 mapsSecret = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "mapsSecret" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+spotless = {id = "com.diffplug.spotless", version.ref = "spotless"}
