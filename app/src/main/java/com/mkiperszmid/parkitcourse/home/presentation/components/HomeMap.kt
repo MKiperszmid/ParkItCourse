@@ -6,7 +6,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,6 +19,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.CameraMoveStartedReason
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
@@ -33,6 +37,7 @@ fun HomeMap(
     currentLocation: Location?,
     carLocation: Location?,
     route: Route?,
+    forceCenterSignal: Int,
     modifier: Modifier = Modifier
 ) {
     val cameraPositionState = rememberCameraPositionState()
@@ -40,17 +45,37 @@ fun HomeMap(
     val mapstyle = remember {
         MapStyleOptions.loadRawResourceStyle(context, R.raw.mapstyle)
     }
+    var userHasInteracted by remember { mutableStateOf(false) }
+
+    LaunchedEffect(cameraPositionState.isMoving) {
+        if (cameraPositionState.isMoving && cameraPositionState.cameraMoveStartedReason == CameraMoveStartedReason.REASON_GESTURE) {
+            userHasInteracted = true
+        }
+    }
 
     LaunchedEffect(currentLocation) {
-        currentLocation?.let {
-            cameraPositionState.animate(
-                CameraUpdateFactory.newLatLng(
-                    LatLng(
-                        it.latitude,
-                        it.longitude
+        if (!userHasInteracted) {
+            currentLocation?.let {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLng(
+                        LatLng(
+                            it.latitude,
+                            it.longitude
+                        )
                     )
                 )
-            )
+            }
+        }
+    }
+
+    LaunchedEffect(forceCenterSignal) {
+        if (forceCenterSignal > 0) {
+            userHasInteracted = false // Reset user interaction flag
+            currentLocation?.let { loc ->
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLng(LatLng(loc.latitude, loc.longitude))
+                )
+            }
         }
     }
 
@@ -105,5 +130,5 @@ private fun bitmapDescriptorFromVector(context: Context, imageId: Int): BitmapDe
 @Preview
 @Composable
 fun HomeMapPreview() {
-    HomeMap(null, null, null)
+    HomeMap(null, null, null, 0)
 }

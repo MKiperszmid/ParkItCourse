@@ -35,7 +35,7 @@ class LocationServiceImpl(
             }
 
             val request = LocationRequest.Builder(1000)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
                 .setWaitForAccurateLocation(false)
                 .setMinUpdateDistanceMeters(5f)
                 .setMaxUpdateDelayMillis(1000)
@@ -83,7 +83,7 @@ class LocationServiceImpl(
             return null
         }
 
-        val result = locationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).await()
+        val result = locationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null).await()
         return result.toDomain()
     }
 }

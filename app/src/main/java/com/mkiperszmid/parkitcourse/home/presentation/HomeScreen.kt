@@ -9,10 +9,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,6 +35,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
+    var forceCenterSignal by remember { mutableStateOf(0) }
 
     Scaffold(modifier = Modifier.fillMaxSize()) {
         if (state.hasRequiredPermissions) {
@@ -40,8 +48,21 @@ fun HomeScreen(
                     currentLocation = state.currentLocation,
                     carLocation = state.car?.location,
                     route = state.route,
+                    forceCenterSignal = forceCenterSignal,
                     modifier = Modifier.fillMaxSize()
                 )
+
+                FloatingActionButton(
+                    onClick = { forceCenterSignal++ },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp) // Standard FAB padding
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.MyLocation,
+                        contentDescription = "Re-center map"
+                    )
+                }
 
                 when (state.carStatus) {
                     CarStatus.NO_PARKED_CAR -> {

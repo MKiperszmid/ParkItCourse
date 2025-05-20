@@ -1,7 +1,9 @@
 package com.mkiperszmid.parkitcourse.home.data
 
+import android.util.Log
 import com.mkiperszmid.parkitcourse.BuildConfig
 import com.mkiperszmid.parkitcourse.home.data.extension.resultOf
+import com.mkiperszmid.parkitcourse.home.data.utils.PolylineUtils
 import com.mkiperszmid.parkitcourse.home.data.local.HomeDao
 import com.mkiperszmid.parkitcourse.home.data.mapper.toDomain
 import com.mkiperszmid.parkitcourse.home.data.mapper.toEntity
@@ -36,7 +38,14 @@ class HomeRepositoryImpl(
         val dest = "${destination.latitude},${destination.longitude}"
 
         return resultOf {
-            api.getDirections(origin, dest, key = BuildConfig.MAPS_API_KEY).toRoute()
+            val originalRoute = api.getDirections(origin, dest, key = BuildConfig.MAPS_API_KEY).toRoute()
+            Log.d("HomeRepositoryImpl", "Polyline points before simplification: ${originalRoute.polylines.size}")
+
+            val simplifiedPolylines = PolylineUtils.simplify(originalRoute.polylines, 5.0)
+            Log.d("HomeRepositoryImpl", "Polyline points after simplification: ${simplifiedPolylines.size}")
+
+            val simplifiedRoute = originalRoute.copy(polylines = simplifiedPolylines)
+            simplifiedRoute
         }
     }
 }

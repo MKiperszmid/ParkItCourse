@@ -1,6 +1,6 @@
 package com.mkiperszmid.parkitcourse.home.presentation
 
-
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +15,7 @@ import com.mkiperszmid.parkitcourse.home.domain.model.Location
 import com.mkiperszmid.parkitcourse.home.domain.usecase.GetPathToCarUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -87,24 +88,26 @@ class HomeViewModel @Inject constructor(
                                     carStatus = CarStatus.SEARCHING
                                 )
 
-                                locationService.getLocationUpdates().collectLatest {
+                                locationService.getLocationUpdates().debounce(750L).collectLatest { debouncedLocation ->
+                                    Log.d("HomeViewModel", "Debounced location update received: $debouncedLocation")
                                     state = state.copy(
-                                        currentLocation = it
+                                        currentLocation = debouncedLocation
                                     )
                                     if (state.currentLocation != null && state.route != null) {
+                                        Log.d("HomeViewModel", "Calling getPathToCarUseCase for location: $debouncedLocation")
                                         getPathToCarUseCase(
                                             state.currentLocation!!,
                                             carLocation.location,
                                             state.route!!
                                         ).onSuccess {
+                                            Log.d("HomeViewModel", "getPathToCarUseCase success, new route received.")
                                             state = state.copy(
                                                 route = it
                                             )
                                         }.onFailure {
-                                            println("Failure!")
+                                            Log.w("HomeViewModel", "getPathToCarUseCase failure: ${it.message}")
                                         }
                                     }
-                                    println("Ubicacion: $it")
                                 }
                             }.onFailure {
                                 // TODO: Show error message

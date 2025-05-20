@@ -1,5 +1,6 @@
 package com.mkiperszmid.parkitcourse.home.domain.usecase
 
+import android.util.Log
 import com.mkiperszmid.parkitcourse.home.domain.HomeRepository
 import com.mkiperszmid.parkitcourse.home.domain.distance.DistanceCalculator
 import com.mkiperszmid.parkitcourse.home.domain.model.Location
@@ -11,7 +12,7 @@ class GetPathToCarUseCase(
     private val distanceCalculator: DistanceCalculator
 ) {
     companion object {
-        const val MAX_METERS = 30.0
+        const val MAX_METERS = 50.0
     }
 
     suspend operator fun invoke(
@@ -23,9 +24,9 @@ class GetPathToCarUseCase(
             distanceCalculator.isLocationOnPath(route.polylines, currentLocation, MAX_METERS)
 
         return if (isOnRoute) {
+            Log.d("GetPathToCarUseCase", "User is on route. Recalculating locally.")
             val closestIndex = getClosestLocationIndex(currentLocation, route.polylines)
             val newPolyline = route.polylines.drop(closestIndex)
-            println("Estas en camino!")
             val distance = distanceCalculator.calculateDistance(currentLocation, newPolyline.last())
 
             Result.success(
@@ -35,7 +36,7 @@ class GetPathToCarUseCase(
                 )
             )
         } else {
-            println("Calculando nueva ruta!")
+            Log.d("GetPathToCarUseCase", "User is off route. Fetching new directions from repository.")
             repository.getDirections(currentLocation, destination)
         }
     }
