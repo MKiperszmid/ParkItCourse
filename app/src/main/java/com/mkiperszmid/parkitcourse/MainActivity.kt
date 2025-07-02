@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun getStartDestination(): NavigationRoute {
-        return if (viewmodel.isLoggedIn) NavigationRoute.HomeScreen else NavigationRoute.LoginScreen
+    return NavigationRoute.HomeScreen
+    //return if (viewmodel.isLoggedIn) NavigationRoute.HomeScreen else NavigationRoute.LoginScreen
     }
 }

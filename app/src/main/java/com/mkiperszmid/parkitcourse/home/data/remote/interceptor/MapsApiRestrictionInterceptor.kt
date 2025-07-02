@@ -38,10 +38,10 @@ class MapsApiRestrictionInterceptor(
             }
 
             val signingCertificate = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                packageInfo.signingInfo.apkContentsSigners[0]
+                packageInfo.signingInfo?.apkContentsSigners?.get(0) ?: throw RuntimeException("No signing certificate found")
             } else {
                 @Suppress("DEPRECATION")
-                packageInfo.signatures[0]
+                packageInfo.signatures?.get(0) ?: throw RuntimeException("No signing certificate found")
             }
 
             val messageDigest = MessageDigest.getInstance("SHA-1")

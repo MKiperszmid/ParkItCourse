@@ -14,7 +14,7 @@ plugins {
 
 android {
     namespace = "com.mkiperszmid.parkitcourse"
-    compileSdk = 34
+    compileSdk = 35
 
     val localPropertiesFile = rootProject.file("local.properties")
     val localProperties = Properties().apply {
@@ -29,7 +29,7 @@ android {
     defaultConfig {
         applicationId = "com.mkiperszmid.parkitcourse"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 4
         versionName = "1.1.1"
 
