@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.spotless)
 }
 
 android {
@@ -40,7 +41,6 @@ android {
 
         buildConfigField("String", "MAPS_API_KEY", "\"$googleMapsApiKey\"")
         buildConfigField("String", "GOOGLE_WEBCLIENT_ID", "\"$googleWebclientId\"")
-
     }
 
     signingConfigs {
@@ -89,6 +89,24 @@ android {
     }
 }
 
+spotless {
+    kotlin {
+        target("**/*.kt")
+        ktlint()
+            .setEditorConfigPath("$projectDir/config/.editorconfig")
+            .customRuleSets(
+                listOf(
+                    "io.nlopez.compose.rules:ktlint:0.3.3"
+                )
+            )
+    }
+
+    kotlinGradle {
+        target("*.kts")
+        ktlint().setEditorConfigPath("$projectDir/config/.editorconfig")
+    }
+}
+
 dependencies {
     // Core
     implementation(libs.core.ktx)
@@ -130,7 +148,7 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.androidx.hilt.compiler)
 
-    //Google Services & Maps
+    // Google Services & Maps
     implementation(libs.play.services.location)
     implementation(libs.maps.compose)
     implementation(libs.play.services.maps)
